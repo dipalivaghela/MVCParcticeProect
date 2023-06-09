@@ -1,0 +1,64 @@
+﻿@model Domain.Model.Patient
+
+@{
+    ViewData["Title"] = "Create";
+}
+
+<h1>Add Patient</h1>
+
+@using (Html.BeginForm())
+{
+    <div>
+        <label for="Name">Name:</label>
+        @Html.TextBoxFor(m => m.Name)
+        @Html.ValidationMessageFor(m => m.Name)
+    </div>
+
+ @*   <div>
+        <label for="Gender">Gender:</label>
+        @Html.EnumDropDownListFor(m => m.Gender, new { @class = "form-control" })
+        @Html.ValidationMessageFor(m => m.Gender)
+    </div>*@
+    <div>
+        <label for="Gender">Gender :</label>
+        @Html.TextBoxFor(m => m.Gender)
+        @Html.ValidationMessageFor(m => m.Gender)
+    </div>
+    <div>
+        <label for="DateOfBirth">Date of Birth:</label>
+        @Html.TextBoxFor(m => m.DateOfBirth, new { type = "date" })
+        @Html.ValidationMessageFor(m => m.DateOfBirth)
+    </div>
+
+    <div>
+        <label for="BloodGroup">Blood Group:</label>
+        @Html.TextBoxFor(m => m.BloodGroup)
+        @Html.ValidationMessageFor(m => m.BloodGroup)
+    </div>
+
+    <div>
+        <label for="ContactNo">Contact No:</label>
+        @Html.TextBoxFor(m => m.ContactNo)
+        @Html.ValidationMessageFor(m => m.ContactNo)
+    </div>
+
+    <div>
+        <label for="EmailId">Email ID:</label>
+        @Html.TextBoxFor(m => m.EmailId)
+        @Html.ValidationMessageFor(m => m.EmailId)
+    </div>
+
+    <div>
+        <label for="Address">Address:</label>
+        @Html.TextBoxFor(m => m.Address)
+        @Html.ValidationMessageFor(m => m.Address)
+    </div>
+
+    <div>
+        <label for="DoctorId">Doctor ID:</label>
+        @Html.TextBoxFor(m => m.DoctorId)
+        @Html.ValidationMessageFor(m => m.DoctorId)
+    </div>
+
+    <button type="submit">Add</button>
+}

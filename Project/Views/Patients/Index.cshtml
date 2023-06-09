@@ -1,0 +1,44 @@
+﻿@model IEnumerable<Domain.Model.Patient>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Patients</h1>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Gender</th>
+            <th>Date of Birth</th>
+            <th>Blood Group</th>
+            <th>Contact No</th>
+            <th>Email ID</th>
+            <th>Address</th>
+            <th>Doctor ID</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var patient in Model)
+        {
+            <tr>
+                <td>@patient.Name</td>
+                <td>@patient.Gender</td>
+                <td>@patient.DateOfBirth</td>
+                <td>@patient.BloodGroup</td>
+                <td>@patient.ContactNo</td>
+                <td>@patient.EmailId</td>
+                <td>@patient.Address</td>
+                <td>@patient.DoctorId</td>
+                <td>
+                    <a href="@Url.Action("Edit", new { id = patient.Id })">Edit</a> |
+                    <a href="@Url.Action("Delete", new { id = patient.Id })">Delete</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<a href="@Url.Action("Create")" class="btn btn-primary">Create New</a>
