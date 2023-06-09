@@ -1,10 +1,33 @@
-﻿@model IEnumerable<Domain.Model.Patient>
+﻿@model IEnumerable<Domain.Model.ViewModel.PatientViewModel>
 
 @{
     ViewData["Title"] = "Index";
 }
 
 <h1>Patients</h1>
+
+<h2>Filter Doctors</h2>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css" />
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+
+<form>
+    <div class="form-group">
+        <label for="name">Name :</label>
+        <input type="text" id="name" name="name" class="form-control"/>
+    </div>
+    <br />
+    <button type="submit" class="btn btn-primary">Filter</button><br />
+</form>
+
+<script>
+    $(document).ready(function () {
+        $('#name').autocomplete({
+            source: '@Url.Action("GetDoctorsByName", "Patients")',
+            minlength : 1,
+        });
+    });
+</script>
 
 <table class="table">
     <thead>
@@ -42,3 +65,60 @@
 </table>
 
 <a href="@Url.Action("Create")" class="btn btn-primary">Create New</a>
+<style>
+    .pagination {
+        margin-top: 10px;
+    }
+
+    .pagination a,
+    .pagination span {
+        padding: 8px 12px;
+        border: 1px solid #ccc;
+        margin-right: 5px;
+        text-decoration: none;
+        color: #333;
+        cursor: pointer;
+    }
+
+    .pagination a:hover {
+        background-color: #f2f2f2;
+    }
+
+    .pagination .disabled {
+        color: #aaa;
+        pointer-events: none;
+        cursor: not-allowed;
+    }
+</style>
+
+<div class="pagination">
+    @if (ViewBag.PageNumber > 1)
+    {
+        <a href="@Url.Action("Index", new { page = ViewBag.PageNumber - 1, pageSize = ViewBag.PageSize, searchQuery = ViewBag.SearchQuery })" class="prev">Previous</a>
+    }
+    else
+    {
+        <span class="disabled">Previous</span>
+    }
+
+    @for (int i = 1; i <= (int)Math.Ceiling((double)ViewBag.TotalItems / ViewBag.PageSize); i++)
+    {
+        if (i == ViewBag.PageNumber)
+        {
+            <span>@i</span>
+        }
+        else
+        {
+            <a href="@Url.Action("Index", new { page = i, pageSize = ViewBag.PageSize, searchQuery = ViewBag.SearchQuery })">@i</a>
+        }
+    }
+
+    @if (ViewBag.PageNumber < (int)Math.Ceiling((double)ViewBag.TotalItems / ViewBag.PageSize))
+    {
+        <a href="@Url.Action("Index", new { page = ViewBag.PageNumber + 1, pageSize = ViewBag.PageSize, searchQuery = ViewBag.SearchQuery })" class="next">Next</a>
+    }
+    else
+    {
+        <span class="disabled">Next</span>
+    }
+</div>

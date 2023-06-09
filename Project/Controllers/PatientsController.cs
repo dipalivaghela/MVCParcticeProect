@@ -1,10 +1,14 @@
 ﻿using BAL;
+using BAL.Helpers;
 using BAL.Interface;
 using BAL.Service;
 using DAL.Interface;
+using Domain.Enums;
 using Domain.Model;
+using Domain.Model.ViewModel;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
+using System.Numerics;
 
 namespace MVCProject.Controllers
 {
@@ -17,19 +21,39 @@ namespace MVCProject.Controllers
             _patientService = patientService;
         }
 
-        public async Task <IActionResult> Index()
+        public async Task<IActionResult> Index(Gender? filterOption, string name, int page = 1, int pageSize = 2)
         {
-            IEnumerable<Patient> patients = await _patientService.GetAllPatients();
+            IEnumerable<PatientViewModel> patients;
+
+            if (!string.IsNullOrEmpty(name))
+            {
+                patients = await _patientService.GetDoctorsByName(name);
+            }
+            else
+            {
+                patients = await _patientService.GetAllPatients();
+            }
+
+            if (filterOption.HasValue)
+            {
+                patients = patients.Where(p => p.Gender == filterOption.Value);
+                return RedirectToAction("Index");
+            }
+         
+            var paginatedDoctors = patients.Paginate(page, pageSize);
+
+            ViewBag.PageNumber = page;
+            ViewBag.PageSize = pageSize;
+            ViewBag.TotalItems = patients.Count();
             return View(patients);
         }
-
         public IActionResult Create()
         {
             return View();
         }
 
         [HttpPost]
-        public async Task <IActionResult> Create(Patient patient)
+        public async Task <IActionResult> Create(PatientViewModel patient)
         {
             if (ModelState.IsValid)
             {
@@ -42,7 +66,7 @@ namespace MVCProject.Controllers
 
         public async Task <IActionResult> Edit(int id)
         {
-            Patient patient = await _patientService.GetPatientById(id);
+            PatientViewModel patient = await _patientService.GetPatientById(id);
             if (patient == null)
             {
                 return NotFound();
@@ -52,7 +76,7 @@ namespace MVCProject.Controllers
         }
 
         [HttpPost]
-        public async Task <IActionResult> Edit(int id, Patient patient)
+        public async Task <IActionResult> Edit(int id, PatientViewModel patient)
         {
             if (id != patient.Id)
             {
@@ -70,7 +94,7 @@ namespace MVCProject.Controllers
 
         public async Task <IActionResult> Delete(int id)
         {
-            Patient patient = await _patientService.GetPatientById(id);
+            PatientViewModel patient = await _patientService.GetPatientById(id);
             if (patient == null)
             {
                 return NotFound();
@@ -82,7 +106,7 @@ namespace MVCProject.Controllers
         [HttpPost, ActionName("Delete")]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            Patient patient = await _patientService.GetPatientById(id);
+            PatientViewModel patient = await _patientService.GetPatientById(id);
             if (patient == null)
             {
                 return NotFound();
@@ -90,6 +114,13 @@ namespace MVCProject.Controllers
 
             await _patientService.DeletePatient(patient);
             return RedirectToAction("Index");
+        }
+
+
+        public async Task<IActionResult> GetDoctorsByName(string Name)
+        {
+            var patients = await _patientService.GetDoctorsByName(Name);          
+            return View(patients);
         }
     }
 }
