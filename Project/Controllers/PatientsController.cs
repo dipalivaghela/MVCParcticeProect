@@ -5,122 +5,151 @@ using BAL.Service;
 using DAL.Interface;
 using Domain.Enums;
 using Domain.Model;
-using Domain.Model.ViewModel;
+using Domain.Model.Dtos;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.Numerics;
 
 namespace MVCProject.Controllers
 {
-    public class PatientsController : Controller 
+    public class PatientsController : Controller
     {
         private readonly IPatientService _patientService;
 
         public PatientsController(IPatientService patientService)
         {
             _patientService = patientService;
+
         }
 
-        public async Task<IActionResult> Index(Gender? filterOption, string name, int page = 1, int pageSize = 2)
+        public async Task<IActionResult>  Index(Gender? filterOption, string name, int page = 1, int pageSize = 5)
         {
-            IEnumerable<PatientViewModel> patients;
-
-            if (!string.IsNullOrEmpty(name))
-            {
-                patients = await _patientService.GetDoctorsByName(name);
-            }
-            else
-            {
-                patients = await _patientService.GetAllPatients();
-            }
-
+            IEnumerable<PatientViewModel> patients = await _patientService.GetAllPatients(name);
+      
             if (filterOption.HasValue)
             {
                 patients = patients.Where(p => p.Gender == filterOption.Value);
                 return RedirectToAction("Index");
             }
-         
-            var paginatedDoctors = patients.Paginate(page, pageSize);
+            var patientViewModels = patients.Select(p => new PatientViewModel
+            {
+                Id = p.Id,
+                Name = p.Name,
+                Gender = p.Gender,
+                DateOfBirth = p.DateOfBirth,
+
+            });
+            var paginatedDoctors = patientViewModels.Paginate(page, pageSize);
 
             ViewBag.PageNumber = page;
             ViewBag.PageSize = pageSize;
             ViewBag.TotalItems = patients.Count();
-            return View(patients);
+            ViewBag.name = name;
+
+            return View(paginatedDoctors);
         }
+      
         public IActionResult Create()
         {
             return View();
         }
 
         [HttpPost]
-        public async Task <IActionResult> Create(PatientViewModel patient)
+        public async Task<IActionResult> Create(PatientViewModel patient)
         {
             if (ModelState.IsValid)
             {
-               await _patientService.AddPatient(patient);
-                return RedirectToAction("Index");
+                try
+                {
+                    await _patientService.AddPatient(patient);
+                    return RedirectToAction("Index");
+                }
+                catch (Exception ex)
+                {
+                    ModelState.AddModelError(string.Empty, "An error occurred while adding the patient: " + ex.Message);
+                }
             }
 
             return View(patient);
         }
+        
 
-        public async Task <IActionResult> Edit(int id)
+
+        public async Task<IActionResult> Edit(int id)
         {
-            PatientViewModel patient = await _patientService.GetPatientById(id);
+            var patient = await _patientService.GetPatientById(id);
             if (patient == null)
             {
+              
                 return NotFound();
             }
 
-            return View(patient);
+            
+            var patientViewModel = new PatientViewModel
+            {
+                Id = patient.Id,
+                Name = patient.Name,
+                Gender= patient.Gender,
+                DateOfBirth = patient.DateOfBirth,
+            };
+
+            return View(patientViewModel);
         }
 
         [HttpPost]
-        public async Task <IActionResult> Edit(int id, PatientViewModel patient)
+        public async Task<IActionResult> Edit(PatientViewModel patientViewModel)
         {
-            if (id != patient.Id)
-            {
-                return NotFound();
-            }
-
             if (ModelState.IsValid)
             {
-               await _patientService.UpdatePatient(patient);
+               
+                var patientDto = new PatientViewModel
+                {
+                    Id = patientViewModel.Id,
+                    Name = patientViewModel.Name,
+                    Gender = patientViewModel.Gender,
+                    DateOfBirth = patientViewModel.DateOfBirth,
+                };
+
+               
+                await _patientService.UpdatePatient(patientDto);
+
                 return RedirectToAction("Index");
             }
 
-            return View(patient);
+            return View(patientViewModel);
         }
 
-        public async Task <IActionResult> Delete(int id)
+        [HttpGet]
+        public async Task<IActionResult> Delete(int id)
         {
-            PatientViewModel patient = await _patientService.GetPatientById(id);
+
+            var patient = await _patientService.GetPatientById(id);
             if (patient == null)
             {
+                
                 return NotFound();
             }
 
-            return View(patient);
+            
+            var patientViewModel = new PatientViewModel
+            {
+                Id = patient.Id,
+                Name = patient.Name,
+               Gender = patient.Gender,
+               DateOfBirth= patient.DateOfBirth,
+            };
+
+            return View(patientViewModel);
         }
 
         [HttpPost, ActionName("Delete")]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            PatientViewModel patient = await _patientService.GetPatientById(id);
-            if (patient == null)
-            {
-                return NotFound();
-            }
+            
+            await _patientService.DeletePatient(id);
 
-            await _patientService.DeletePatient(patient);
             return RedirectToAction("Index");
         }
 
-
-        public async Task<IActionResult> GetDoctorsByName(string Name)
-        {
-            var patients = await _patientService.GetDoctorsByName(Name);          
-            return View(patients);
-        }
     }
 }

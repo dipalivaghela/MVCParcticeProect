@@ -42,12 +42,12 @@ app.UseAuthorization();
 app.UseEndpoints(endpoints =>
 {
     endpoints.MapControllerRoute(
-        name: "default",
-        pattern: "{controller=Doctor}/{action=Index}/{id?}");
-
-    endpoints.MapControllerRoute(
         name: "patient",
         pattern: "/{controller=Patients}/{action=Index}/{id?}");
+
+    endpoints.MapControllerRoute(
+        name: "doctor",
+        pattern: "{controller=Doctor}/{action=Index}/{id?}");
 
 });
 
