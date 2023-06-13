@@ -10,14 +10,18 @@
 <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css" />
 <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 
-<form asp-action="Index" method="get">
+<form method="get" action="@Url.Action("Index")">
     <div class="form-group">
         <label for="name">Name :</label>
-        <input type="text" id="name" name="name" class="form-control" value="@ViewBag.SearchName" />
+        <input type="text" id="name" name="searchQuery" class="form-control" value="@ViewBag.SearchQuery" />
     </div>
     <br />
     <button type="submit" class="btn btn-dark">Search</button><br /><br />
 </form>
+@*<form method="get" action="@Url.Action("Index")">
+    <input type="text" name="searchQuery" placeholder="Search by name" value="@ViewBag.SearchQuery" />
+    <button type="submit">Search</button>
+</form>*@
 
 <script>
     $(document).ready(function () {
@@ -35,6 +39,7 @@
             <th>Name</th>
             <th>Gender</th>
             <th>Date of Birth</th>
+            @*<th>DoctorId</th>*@
             <th>Actions</th>
         </tr>
     </thead>
@@ -46,8 +51,8 @@
                 <td>@patient.Name</td>
                 <td>@patient.Gender</td>
                 <td>@patient.DateOfBirth</td>
+                @*<td>@patient.DoctorId</td>*@
                 <td>
-
                     <a href="@Url.Action("Edit", new { id = patient.Id }) " class="btn btn-light">Edit</a> |
                     <a href="@Url.Action("Delete", new { id = patient.Id })" class="btn btn-danger">Delete</a>
                 </td>

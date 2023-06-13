@@ -1,4 +1,5 @@
 ﻿using Domain.Model;
+using Domain.Model.Dtos;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -12,6 +13,8 @@ namespace DAL.DBContext
     {
         public DBContextClass(DbContextOptions<DBContextClass> options) :base (options){ }
 
-       public DbSet<Patient> Patients { get; set; }
+        public DbSet<Patient> Patients { get; set; }
+      
+
     }
 }

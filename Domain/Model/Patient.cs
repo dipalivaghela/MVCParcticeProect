@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Reflection;
 using System.Text;
@@ -12,7 +13,7 @@ namespace Domain.Model
     public class Patient
     {
         [Key]
-        public int? Id { get; set; }
+        public int Id { get; set; }
         public string? Name { get; set; }
         public Gender? Gender { get; set; }
         public DateTime? DateOfBirth { get; set; }
@@ -20,6 +21,9 @@ namespace Domain.Model
         public string? ContactNo { get; set; }
         public string? EmailId { get; set; }
         public string? Address { get; set; }
-        public int? DoctorId { get; set; }
+        /*[ForeignKey("Doctor")]*/
+        public virtual int DoctorId { get; set; }
+        public virtual Doctor Doctors { get; set; }
+
     }
 }

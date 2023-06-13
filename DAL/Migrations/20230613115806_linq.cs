@@ -5,12 +5,18 @@
 namespace DAL.Migrations
 {
     /// <inheritdoc />
-    public partial class done : Migration
+    public partial class linq : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-
+            migrationBuilder.Sql(
+          @"CREATE PROCEDURE GetPatientsByName
+              @Name NVARCHAR(100)
+              AS
+              BEGIN
+                  SELECT * FROM Patients WHERE Name LIKE '%' + @Name + '%'
+              END");
         }
 
         /// <inheritdoc />

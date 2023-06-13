@@ -22,13 +22,47 @@ namespace DAL.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-            modelBuilder.Entity("Domain.Model.Patient", b =>
+            modelBuilder.Entity("Domain.Model.Doctor", b =>
                 {
-                    b.Property<int?>("Id")
+                    b.Property<int?>("DoctorId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int?>("Id"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int?>("DoctorId"));
+
+                    b.Property<string>("ContactNo")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("EmailId")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Experience")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int?>("Gender")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Schedule")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Specialization")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("DoctorId");
+
+                    b.ToTable("Doctor");
+                });
+
+            modelBuilder.Entity("Domain.Model.Patient", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Address")
                         .HasColumnType("nvarchar(max)");
@@ -42,7 +76,7 @@ namespace DAL.Migrations
                     b.Property<DateTime?>("DateOfBirth")
                         .HasColumnType("datetime2");
 
-                    b.Property<int?>("DoctorId")
+                    b.Property<int>("DoctorId")
                         .HasColumnType("int");
 
                     b.Property<string>("EmailId")
@@ -56,7 +90,25 @@ namespace DAL.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("DoctorId");
+
                     b.ToTable("Patients");
+                });
+
+            modelBuilder.Entity("Domain.Model.Patient", b =>
+                {
+                    b.HasOne("Domain.Model.Doctor", "Doctors")
+                        .WithMany("Patient")
+                        .HasForeignKey("DoctorId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Doctors");
+                });
+
+            modelBuilder.Entity("Domain.Model.Doctor", b =>
+                {
+                    b.Navigation("Patient");
                 });
 #pragma warning restore 612, 618
         }
