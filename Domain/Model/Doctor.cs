@@ -20,10 +20,10 @@ namespace Domain.Model
         public string? ContactNo { get; set; }
         public string? EmailId { get; set; }
         public string? Schedule { get; set; }
-        [NotMapped]
-        public DateOnly? CreatedAt { get; set; }
-        [NotMapped]
-        public DateOnly? UpdatedAt { get; set;}
+       
+        public DateTime? CreatedAt { get; set; }
+        
+        public DateTime? UpdatedAt { get; set;}
         public ICollection<Patient>? Patient { get; set; }
     }
 }

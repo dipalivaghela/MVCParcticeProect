@@ -1,6 +1,7 @@
-﻿using BAL.Interface;
+﻿using BAL.DoctorService;
 using BAL.Service;
 using DAL.DBContext;
+using DAL.DoctorRepo;
 using DAL.GenericInterface;
 using DAL.GenericRepo;
 using DAL.Interface;
@@ -16,8 +17,8 @@ namespace IOCcontainer
           services.AddScoped<IPatientRepo, PatientRepo>();
           services.AddScoped<IPatientService, PatientService>();
 
-
-            
+            services.AddScoped<IDoctorRepo,DoctorRepo>();
+            services.AddScoped<IDoctorService,DoctorService>();
         }
     }
 }

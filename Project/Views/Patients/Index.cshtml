@@ -1,4 +1,4 @@
-﻿@model IEnumerable<Domain.Model.Dtos.PatientViewModel>
+﻿@model IEnumerable<Domain.Model.Dtos.PatientDto>
 
 @{
     ViewData["Title"] = "Index";
@@ -6,31 +6,32 @@
 
 <h1 style="text-align:center">Patients</h1>
 
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css" />
-<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+<script src="\lib\jquery\dist\jquery.min.js"></script>
 
 <form method="get" action="@Url.Action("Index")">
     <div class="form-group">
         <label for="name">Name :</label>
-        <input type="text" id="name" name="searchQuery" class="form-control" value="@ViewBag.SearchQuery" />
+        <input type="text" id="searchName" name="searchName" class="form-control" value="@ViewBag.SearchName" />
     </div>
     <br />
-    <button type="submit" class="btn btn-dark">Search</button><br /><br />
+    <button type="submit" class="btn btn-dark">Search</button>
+    <br /><br />
 </form>
-@*<form method="get" action="@Url.Action("Index")">
-    <input type="text" name="searchQuery" placeholder="Search by name" value="@ViewBag.SearchQuery" />
-    <button type="submit">Search</button>
-</form>*@
 
-<script>
-    $(document).ready(function () {
-        $('#name').autocomplete({
-            source: '@Url.Action("Index", "Patients")',
-            minlength : 1,
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://code.jquery.com/ui/1.13.0/jquery-ui.js"></script>
+
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    <script type="text/javascript">
+        $('#searchName').autocomplete({
+            debugger
+            source: '@Url.Action("SearchPatientsByName")', 
+            debugger
         });
-    });
-</script>
+        </script>
+}
 
 <table  class="table table-hover table-dark">
     <thead>
@@ -39,7 +40,6 @@
             <th>Name</th>
             <th>Gender</th>
             <th>Date of Birth</th>
-            @*<th>DoctorId</th>*@
             <th>Actions</th>
         </tr>
     </thead>
@@ -51,7 +51,6 @@
                 <td>@patient.Name</td>
                 <td>@patient.Gender</td>
                 <td>@patient.DateOfBirth</td>
-                @*<td>@patient.DoctorId</td>*@
                 <td>
                     <a href="@Url.Action("Edit", new { id = patient.Id }) " class="btn btn-light">Edit</a> |
                     <a href="@Url.Action("Delete", new { id = patient.Id })" class="btn btn-danger">Delete</a>

@@ -1,0 +1,116 @@
+﻿@model DoctorPatient
+@using Domain.Model
+<h2>Create Patient</h2>
+<script src="\lib\jquery\dist\jquery.min.js"></script>
+<div>
+    <label for="doctors">Select Doctor:</label>
+    <select id="doctors">
+        <option value="">-- Select Doctor --</option>
+        @foreach (var doctor in Model.Doctors)
+        {
+            <option value="@doctor.DoctorId">@doctor.Name</option>
+        }
+    </select>
+</div>
+<div>
+    <label for="patients">Patients:</label>
+    <select id="patients" disabled>
+        <option value="">-- Select Doctor First --</option>
+    </select>
+</div>
+
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            $('#doctors').change(function () {
+                var doctorId = $(this).val();
+                if (doctorId) {
+                    $.ajax({
+                        url: '@Url.Action("GetPatientsByDoctorId", "Dropdown")',
+                        type: 'POST',
+                        data: { doctorId: doctorId },
+                        success: function (response) {
+                            debugger
+                            var patientsDropdown = $('#patients');
+                            patientsDropdown.empty();
+                            if (response.length > 0) {
+                                $.each(response, function (index, patient) {
+                                    patientsDropdown.append($('<option></option>').val(patient.patientId).text(patient.name));
+                                });
+                                patientsDropdown.prop('disabled', false);
+                                alert('Successfully called');
+                             
+                            } else {
+                                patientsDropdown.append($('<option></option>').val('').text('-- No Patients Found --'));
+                                patientsDropdown.prop('disabled', true);
+                                alert('Successfully not called');
+                            }
+                        }
+                    });
+                } else {
+                    $('#patients').empty().prop('disabled', true);
+                }
+            });
+            $('#patients').change(function () {
+                var selectedPatientId = $(this).val();   
+                console.log('Selected Patient ID:', selectedPatientId);
+            });
+        });
+    </script>
+}
+
+@*@model DoctorPatient
+@using Domain.Model
+
+<h2>Doctors and Patients</h2>
+
+<div>
+    <label for="doctors">Select Doctor:</label>
+    <select id="doctors">
+        <option value="">-- Select Doctor --</option>
+        @foreach (var doctor in Model.Doctors)
+        {
+            <option value="@doctor.DoctorId">@doctor.Name</option>
+        }
+    </select>
+</div>
+
+<div>
+    <label for="patients">Patients:</label>
+    <select id="patients" disabled>
+        <option value="">-- Select Doctor First --</option>
+    </select>
+</div>
+
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            $('#doctors').change(function () {
+                var doctorId = $(this).val();
+                if (doctorId) {
+                    $.ajax({
+                        url: '@Url.Action("GetPatientsByDoctorId", "DoctorPatient")',
+                        type: 'POST',
+                        data: { doctorId: doctorId },
+                        success: function (response) {
+                            var patientsDropdown = $('#patients');
+                            patientsDropdown.empty();
+                            if (response.length > 0) {
+                                $.each(response, function (index, patient) {
+                                    patientsDropdown.append($('<option></option>').val(patient.Id).text(patient.Name));
+                                });
+                                patientsDropdown.prop('disabled', false);
+                            } else {
+                                patientsDropdown.append($('<option></option>').val('').text('-- No Patients Found --'));
+                                patientsDropdown.prop('disabled', true);
+                            }
+                        }
+                    });
+                } else {
+                    $('#patients').empty().prop('disabled', true);
+                }
+            });
+        });
+    </script>
+}
+*@

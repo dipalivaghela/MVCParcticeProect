@@ -14,6 +14,7 @@ namespace DAL.DBContext
         public DBContextClass(DbContextOptions<DBContextClass> options) :base (options){ }
 
         public DbSet<Patient> Patients { get; set; }
+        public DbSet<Doctor> Doctors { get; set; }
       
 
     }

@@ -1,4 +1,4 @@
-﻿using BAL.Interface;
+﻿
 using DAL.Interface;
 using Domain.Model;
 using Domain.Model.Dtos;
@@ -20,11 +20,11 @@ namespace BAL.Service
             _patientRepo = patientRepo;
         }
 
-        public async Task<IEnumerable<PatientViewModel>> GetAllPatients( )
+        public async Task<IEnumerable<PatientDto>> GetAllPatients( )
         {
             var patients = await _patientRepo.GetAllPatientsAsync();
 
-            var patientDtos = patients.Select(p => new PatientViewModel
+            var patientDtos = patients.Select(p => new PatientDto
             {
                 Id = p.Id,
                 Name = p.Name,
@@ -32,17 +32,11 @@ namespace BAL.Service
                 DateOfBirth = (DateTime)p.DateOfBirth,
                 DoctorId = p.DoctorId,
             });
-
-         /*   if (!string.IsNullOrEmpty(name))
-            {
-                patientDtos = patientDtos.Where(p => p.Name.Contains(name));
-            }*/
-
             return patientDtos;
         }
 
 
-        public async Task<PatientViewModel> GetPatientById(int id)
+        public async Task<PatientDto> GetPatientById(int id)
         {
             var patient = await _patientRepo.GetPatientByIdAsync(id);
             if (patient == null)
@@ -50,7 +44,7 @@ namespace BAL.Service
                 return null; 
             }
 
-            var patientViewModel = new PatientViewModel
+            var patientViewModel = new PatientDto
             {
                 Id = patient.Id,
                 Name = patient.Name,
@@ -63,11 +57,11 @@ namespace BAL.Service
         }
 
 
-        public async Task AddPatient(PatientViewModel patient)
+        public async Task AddPatient(PatientDto patient)
         {
             var patientModel = new Patient
             {
-                Id = (int)patient.Id,
+               // Id = (int)patient.Id,
                 Name = patient.Name,
                 Gender = patient.Gender,
                 DateOfBirth = patient.DateOfBirth,
@@ -78,7 +72,7 @@ namespace BAL.Service
             await _patientRepo.AddPatientAsync(patientModel);
         }
 
-        public async Task UpdatePatient(PatientViewModel patient)
+        public async Task UpdatePatient(PatientDto patient)
         {
             var patientModel = await _patientRepo.GetPatientByIdAsync((int)patient.Id);
 
@@ -103,7 +97,40 @@ namespace BAL.Service
 
             await _patientRepo.DeletePatientAsync(patient);
         }
-      
+
+        public async Task<IEnumerable<PatientDto>> SearchPatientsByName(string name)
+        {
+            var patients = await _patientRepo.SearchPatientsByNameAsync(name);
+
+            var patientViewModels = patients.Select(p => new PatientDto
+            {
+                Id = p.Id,
+                Name = p.Name,
+                Gender = p.Gender,
+                DateOfBirth = (DateTime)p.DateOfBirth,
+                DoctorId = p.DoctorId
+            });
+
+            return patientViewModels;
+        }
+        public async Task<IEnumerable<Patient>> GetPatientsByDoctorId(int doctorId)
+        {
+            return await _patientRepo.GetPatientsByDoctorIdAsync(doctorId);
+        }
+        /*public async Task<IEnumerable<PatientDto>> GetPatientsByDoctorId(int doctorId)
+        {
+            var patients = await _patientRepo.GetPatientsByDoctorId(doctorId);
+
+            return patients.Select(p => new PatientDto
+            {
+                Id = p.Id,
+                Name = p.Name,
+                Gender = p.Gender,
+                DateOfBirth = (DateTime)p.DateOfBirth,
+                DoctorId = p.DoctorId
+            });
+        }*/
+
     }
 }
 

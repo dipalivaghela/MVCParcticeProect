@@ -12,7 +12,7 @@ namespace DAL.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
-                name: "Doctor",
+                name: "Doctors",
                 columns: table => new
                 {
                     DoctorId = table.Column<int>(type: "int", nullable: false)
@@ -27,7 +27,7 @@ namespace DAL.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Doctor", x => x.DoctorId);
+                    table.PrimaryKey("PK_Doctors", x => x.DoctorId);
                 });
 
             migrationBuilder.CreateTable(
@@ -49,9 +49,9 @@ namespace DAL.Migrations
                 {
                     table.PrimaryKey("PK_Patients", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Patients_Doctor_DoctorId",
+                        name: "FK_Patients_Doctors_DoctorId",
                         column: x => x.DoctorId,
-                        principalTable: "Doctor",
+                        principalTable: "Doctors",
                         principalColumn: "DoctorId",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -69,7 +69,7 @@ namespace DAL.Migrations
                 name: "Patients");
 
             migrationBuilder.DropTable(
-                name: "Doctor");
+                name: "Doctors");
         }
     }
 }

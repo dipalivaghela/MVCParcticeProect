@@ -8,10 +8,10 @@ using System.Threading.Tasks;
 
 namespace Domain.Model.Dtos
 {
-    public class PatientViewModel
+    public class PatientDto
     {
      //   [Key]
-        public int Id { get; set; }
+        public int? Id { get; set; }
 
         [Required(AllowEmptyStrings = false, ErrorMessage = "Please enter the name")]
         [StringLength(maximumLength: 25, MinimumLength = 10, ErrorMessage = "Length must be between 10 to 25")]
@@ -19,5 +19,6 @@ namespace Domain.Model.Dtos
         public Gender? Gender { get; set; }
         public DateTime DateOfBirth { get; set; }
         public int? DoctorId { get; set; }
+
     }
 }

@@ -31,7 +31,7 @@ namespace DAL.GenericRepo
 
         public Task AddAsync(T entity)
         {
-          _context.Set<T>().Add(entity);
+          _context.Set<T>().AddRangeAsync(entity);
           return  _context.SaveChangesAsync();
         }
 

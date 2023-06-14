@@ -48,24 +48,22 @@ namespace DAL.Repo
                await DeleteAsync(patient);
             }
 
-        /* public async Task<IEnumerable<Patient>> SearchPatientsAsync(string searchQuery)
-         {
-             var patient = await _dbContext.Patients
-               .FromSqlRaw("EXECUTE GetPatientsByName @Name = {0}", searchQuery)
-               .ToListAsync();
-
-             return patient;*/
-
-        /*return await _dbContext.Patients
-            .Where(p => p.Name.Contains(searchQuery))
-            .ToListAsync();}*/
-
-        /*public IEnumerable<Patient> GetPatientsByName(string name)
+        public async Task<IEnumerable<Patient>> SearchPatientsByNameAsync(string name)
         {
-            return _dbContext.Patients
-                .FromSqlRaw("EXECUTE GetPatientsByName @Name", new SqlParameter("Name", name))
-                .ToList();
-        }*/
+            var parameters = new SqlParameter("Name", name);
+
+            return await _dbContext.Patients.FromSqlRaw("EXECUTE SearchPatients @Name", parameters).ToListAsync();
+        }
+        /*   public async Task<IEnumerable<Patient>> GetPatientsByDoctorId(int doctorId)
+           {
+               return await _dbContext.Patients.Where(p => p.DoctorId == doctorId).ToListAsync();
+           }*/
+        public async Task<IEnumerable<Patient>> GetPatientsByDoctorIdAsync(int doctorId)
+        {
+            return await _dbContext.Patients
+                .Where(p => p.DoctorId == doctorId)
+                .ToListAsync();
+        }
     }
 }
 

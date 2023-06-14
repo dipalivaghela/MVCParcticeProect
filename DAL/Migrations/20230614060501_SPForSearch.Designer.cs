@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DAL.Migrations
 {
     [DbContext(typeof(DBContextClass))]
-    [Migration("20230613092138_new")]
-    partial class @new
+    [Migration("20230614060501_SPForSearch")]
+    partial class SPForSearch
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -36,6 +36,9 @@ namespace DAL.Migrations
                     b.Property<string>("ContactNo")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<DateTime?>("CreatedAt")
+                        .HasColumnType("datetime2");
+
                     b.Property<string>("EmailId")
                         .HasColumnType("nvarchar(max)");
 
@@ -54,9 +57,12 @@ namespace DAL.Migrations
                     b.Property<string>("Specialization")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("datetime2");
+
                     b.HasKey("DoctorId");
 
-                    b.ToTable("Doctor");
+                    b.ToTable("Doctors");
                 });
 
             modelBuilder.Entity("Domain.Model.Patient", b =>

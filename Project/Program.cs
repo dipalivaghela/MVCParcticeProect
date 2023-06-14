@@ -1,4 +1,4 @@
-using BAL.Interface;
+
 using BAL.Service;
 using DAL.DBContext;
 using DAL.GenericInterface;
@@ -6,6 +6,7 @@ using DAL.GenericRepo;
 using IOCcontainer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.FileSystemGlobbing.Internal;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -43,12 +44,16 @@ app.UseEndpoints(endpoints =>
 {
     endpoints.MapControllerRoute(
         name: "patient",
-        pattern: "/{controller=Patients}/{action=Index}/{id?}");
+        pattern: "{controller=Patients}/{action=Index}/{id?}");
 
     endpoints.MapControllerRoute(
         name: "doctor",
         pattern: "{controller=Doctor}/{action=Index}/{id?}");
 
+    endpoints.MapControllerRoute(
+name: "DoctorPatient",
+        pattern: "{controller=Dropdown}/{action=Index}/{id?}"
+        );
 });
 
 app.Run();
