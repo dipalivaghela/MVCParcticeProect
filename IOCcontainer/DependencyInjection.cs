@@ -12,7 +12,7 @@ namespace IOCcontainer
 {
     public static class DependencyInjection
     {
-       public static void RegisterServices(IServiceCollection services)
+       public static void RegisterServices(this IServiceCollection services)
        {
           services.AddScoped<IPatientRepo, PatientRepo>();
           services.AddScoped<IPatientService, PatientService>();

@@ -8,6 +8,8 @@ using Domain.Model.Dtos;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.Numerics;
+using System.Threading;
+
 
 namespace MVCProject.Controllers
 {
@@ -15,12 +17,17 @@ namespace MVCProject.Controllers
     {
         private readonly IPatientService _patientService;
 
+      
+      
+
         public PatientsController(IPatientService patientService)
         {
             _patientService = patientService;
+           
         }
         public async Task<IActionResult> Index(Gender? filterOption, string searchName, int page = 1, int pageSize = 5)
         {
+            
             IEnumerable<PatientDto> patients;
 
             if (!string.IsNullOrEmpty(searchName))
@@ -31,7 +38,7 @@ namespace MVCProject.Controllers
             {
                 patients = await _patientService.GetAllPatients();
             }
-
+            
             if (filterOption.HasValue)
             {
                 patients = patients.Where(p => p.Gender == filterOption.Value);
@@ -58,6 +65,8 @@ namespace MVCProject.Controllers
 
         public IActionResult Create()
         {
+           /* var patientDto = new PatientDto();
+            return View(patientDto);*/
             return View();
         }
 
@@ -69,14 +78,15 @@ namespace MVCProject.Controllers
                 try
                 {
                     await _patientService.AddPatient(patient);
-                    return RedirectToAction("Index");
+                    return PartialView("_CreatePartial", new PatientDto());
+                  //  return RedirectToAction("Index");
                 }
                 catch (Exception ex)
                 {
                     ModelState.AddModelError(string.Empty, "An error occurred while adding the patient: " + ex.Message);
                 }
             }
-            return View(patient);
+            return PartialView("_CreatePartial", patient);
         }
 
         public async Task<IActionResult> Edit(int id)
@@ -153,6 +163,7 @@ namespace MVCProject.Controllers
         [HttpGet]
         public async Task<IActionResult> SearchPatientsByName(string name)
         {
+
             var patients = await _patientService.SearchPatientsByName(name);
             var patientNames = patients.Select(p => p.Name).ToList();
             return Json(patientNames);

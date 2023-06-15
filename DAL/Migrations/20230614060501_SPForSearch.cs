@@ -11,7 +11,7 @@ namespace DAL.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.Sql(
-       @"CREATE PROCEDURE SearchPatients
+             @"CREATE PROCEDURE SearchPatients
                     @Name NVARCHAR(100)
                 AS
                 BEGIN

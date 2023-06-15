@@ -1,10 +1,4 @@
-﻿@model IEnumerable<Domain.Model.Dtos.DoctorDto>
-
-@{
-    ViewData["Title"] = "Index";
-}
-
-<h1>Doctor</h1>
-
-
-<h1>Index</h1>
+﻿<form method="post" enctype="multipart/form-data" action="/Doctor/Import">
+    <input type="file" name="file" />
+    <input type="submit" value="Import" />
+</form>

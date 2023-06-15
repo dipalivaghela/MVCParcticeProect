@@ -6,6 +6,105 @@
 
 <h1 style="text-align:center">Patients</h1>
 
+<form method="get" action="@Url.Action("Index")">
+    <div class="form-group">
+        <label for="searchName">Name:</label>
+        <input type="text" id="searchName" name="searchName" class="form-control" value="@ViewBag.SearchName" />
+    </div>
+    <br />
+    <button type="submit" class="btn btn-dark">Search</button>
+    <br /><br />
+</form>
+
+<table class="table table-hover table-dark">
+    <thead>
+        <tr>
+            <th>Id</th>
+            <th>Name</th>
+            <th>Gender</th>
+            <th>Date of Birth</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var patient in Model)
+        {
+            <tr>
+                <td>@patient.Id</td>
+                <td>@patient.Name</td>
+                <td>@patient.Gender</td>
+                <td>@patient.DateOfBirth</td>
+                <td>
+                    <a href="@Url.Action("Edit", new { id = patient.Id })" class="btn btn-light">Edit</a> |
+                    <a href="@Url.Action("Delete", new { id = patient.Id })" class="btn btn-danger">Delete</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<div class="modal fade" id="createModal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Create Patient</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body" id="createModal">
+                @Html.Partial("_CreatePartial",new Domain.Model.Dtos.PatientDto())
+            </div>
+        </div>
+    </div>
+</div>
+
+<button id="createButton" class="btn btn-dark">Create</button>
+
+@section Scripts {
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://code.jquery.com/ui/1.13.0/jquery-ui.js"></script>
+
+    <script>
+        $(document).ready(function () {
+            $('#createButton').click(function () {
+                $('#createModal').modal('show');
+            });
+
+            $('#searchName').autocomplete({
+                source: function (request, response) {
+                    $.ajax({
+                        url: '@Url.Action("SearchPatientsByName")',
+                        data: { name: request.term },
+                        success: function (data) {
+
+                            debugger
+                            response(data);
+                        }
+                    });
+                },
+                select: function (event, ui) {
+                    $('#searchName').val(ui.item.label);
+                    $('#Id').val(ui.item.value);
+                    return false;
+                }
+            });
+        });
+    </script>
+}
+
+
+
+@*@model IEnumerable<Domain.Model.Dtos.PatientDto>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1 style="text-align:center">Patients</h1>
+
+
+
 <script src="\lib\jquery\dist\jquery.min.js"></script>
 
 <form method="get" action="@Url.Action("Index")">
@@ -22,16 +121,7 @@
 <script src="https://code.jquery.com/ui/1.13.0/jquery-ui.js"></script>
 
 
-@section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
-    <script type="text/javascript">
-        $('#searchName').autocomplete({
-            debugger
-            source: '@Url.Action("SearchPatientsByName")', 
-            debugger
-        });
-        </script>
-}
+
 
 <table  class="table table-hover table-dark">
     <thead>
@@ -59,8 +149,50 @@
         }
     </tbody>
 </table>
+<div class="modal fade" id="createModal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Create Patient</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                @Html.Partial("_CreatePartial")
+            </div>
+        </div>
+    </div>
+</div>
+<button id="createButton" class="btn btn-dark">Create</button>
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            $('#createButton').click(function () {
+                $('#createModal').modal('show');
+            });
+        });
+    </script>
+}
 
-<a href="@Url.Action("Create")" class="btn btn-dark">Create New</a>
+
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+    <script type="text/javascript">
+        $('#searchName').autocomplete({
+            debugger
+                    source: '@Url.Action("SearchPatientsByName")',
+            debugger
+                });
+    </script>
+
+    
+}*@
+
+@*<a href="@Url.Action("_Create")" class="btn btn-dark">Create New</a>*@
 <style>
     .pagination {
         margin-top: 10px;

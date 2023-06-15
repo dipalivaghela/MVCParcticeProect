@@ -2,6 +2,7 @@
 using DAL.GenericInterface;
 using DAL.GenericRepo;
 using Domain.Model;
+using Domain.Model.Dtos;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -20,6 +21,11 @@ namespace DAL.DoctorRepo
         public async Task<IEnumerable<Doctor>> GetAllDoctorsAsync()
         {
             return await _dBContext.Doctors.ToListAsync();
+        }
+        public void InsertExcel(Doctor doctor)
+        {
+            _dBContext.Doctors.Add(doctor);
+            _dBContext.SaveChanges();
         }
 
     }

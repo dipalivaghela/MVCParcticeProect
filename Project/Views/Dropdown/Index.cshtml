@@ -1,17 +1,20 @@
 ﻿@model DoctorPatient
 @using Domain.Model
 <h2>Create Patient</h2>
+
 <script src="\lib\jquery\dist\jquery.min.js"></script>
-<div>
+
+<div class="dropdown">
+  
     <label for="doctors">Select Doctor:</label>
     <select id="doctors">
-        <option value="">-- Select Doctor --</option>
+        <option value="" class="dropdown-menu">-- Select Doctor --</option>
         @foreach (var doctor in Model.Doctors)
         {
-            <option value="@doctor.DoctorId">@doctor.Name</option>
+            <option value="@doctor.DoctorId" class="dropdown-item">@doctor.Name</option>
         }
     </select>
-</div>
+</div><br/>
 <div>
     <label for="patients">Patients:</label>
     <select id="patients" disabled>
@@ -29,14 +32,17 @@
                         url: '@Url.Action("GetPatientsByDoctorId", "Dropdown")',
                         type: 'POST',
                         data: { doctorId: doctorId },
-                        success: function (response) {
+                        success: function (response) {                        
                             debugger
                             var patientsDropdown = $('#patients');
                             patientsDropdown.empty();
                             if (response.length > 0) {
+                                debugger
+                                $('#searchName').find('option').remove()
                                 $.each(response, function (index, patient) {
                                     patientsDropdown.append($('<option></option>').val(patient.patientId).text(patient.name));
                                 });
+
                                 patientsDropdown.prop('disabled', false);
                                 alert('Successfully called');
                              

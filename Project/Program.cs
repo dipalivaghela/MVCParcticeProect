@@ -16,11 +16,10 @@ builder.Services.AddControllersWithViews();
 DependencyInjection.RegisterServices(builder.Services);
 
 builder.Services.AddDbContext<DBContextClass>(options =>
-            options.UseSqlServer(builder.Configuration.GetConnectionString("HospitalManagementConnectionString")));
+           options.UseSqlServer(builder.Configuration.GetConnectionString("HospitalManagementConnectionString")));
 
 //builder.Services.AddScoped<IDoctorRepo, DoctorRepo>();
 builder.Services.AddScoped(typeof(IGenericRepo<>), typeof(GenericRepo<>));
-
 
 
 var app = builder.Build();
@@ -47,8 +46,10 @@ app.UseEndpoints(endpoints =>
         pattern: "{controller=Patients}/{action=Index}/{id?}");
 
     endpoints.MapControllerRoute(
-        name: "doctor",
-        pattern: "{controller=Doctor}/{action=Index}/{id?}");
+      name: "bulkInsert",
+      pattern: "Doctor/Index",
+      defaults: new { controller = "Doctor", action = "Index" }
+  );
 
     endpoints.MapControllerRoute(
 name: "DoctorPatient",
