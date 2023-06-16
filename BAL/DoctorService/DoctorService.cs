@@ -20,18 +20,19 @@ namespace BAL.DoctorService
             _doctorRepository = doctorRepository;
         }
 
+
         public async Task<IEnumerable<Doctor>> GetAllDoctors()
         {
-            return await _doctorRepository.GetAllAsync();
+            return await _doctorRepository.GetAllDoctorsAsync();
         }
 
         public void ImportDataFromExcel(Stream excelStream)
-        {
+        {   
             using (var workbook = new XLWorkbook(excelStream))
             {
                 var worksheet = workbook.Worksheet(1); 
 
-                var rows = worksheet.RowsUsed().Skip(1);
+                var rows = worksheet.RowsUsed().Skip(1); 
 
                 foreach (var row in rows)
                 {
@@ -53,8 +54,6 @@ namespace BAL.DoctorService
                     _doctorRepository.InsertExcel(newData);
                 }
             }
-        }
-
-
+        }      
     }
 }

@@ -26,7 +26,7 @@ namespace DAL.Repo
             public async Task<IEnumerable<Patient>> GetAllPatientsAsync()
             {
                    return await GetAllAsync();
-        }
+            }
 
             public async Task<Patient> GetPatientByIdAsync(int id)
             {

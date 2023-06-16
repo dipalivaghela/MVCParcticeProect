@@ -1,4 +1,6 @@
 ﻿using BAL.DoctorService;
+using ClosedXML.Excel;
+using Domain.Enums;
 using Domain.Model;
 using Domain.Model.Dtos;
 using Microsoft.AspNetCore.Mvc;
@@ -14,25 +16,12 @@ namespace MVCPracticeProject.Controllers
         {
             _doctorService = doctorService;
         }
-        public async Task<IActionResult> Index()
-        {
-            var doctors = await _doctorService.GetAllDoctors();
-       /*     var doctorDtos = doctors.Select(d => new DoctorDto
-            {
-                // Id = d.Id,
-                Name = d.Name,
-                Gender = d.Gender,
-                Specialization = d.Specialization,
-                Experience = d.Experience,
-                ContactNo = d.ContactNo,
-                EmailId = d.EmailId,
-                Schedule = d.Schedule
-            });*/
 
-            
+        public async Task<IActionResult> Index()
+           {
+            var doctors = await _doctorService.GetAllDoctors();
             return View(doctors);
         }
-
 
         [HttpPost]
         public IActionResult Import(IFormFile file)
@@ -43,9 +32,9 @@ namespace MVCPracticeProject.Controllers
                 {
                     _doctorService.ImportDataFromExcel(excelStream);
                 }
-            }
+            }     
             return RedirectToAction("Index");
-        }
+        }     
     }
 }
 

@@ -11,8 +11,7 @@ namespace BAL.DoctorService
     public interface IDoctorService
     {
         Task<IEnumerable<Doctor>> GetAllDoctors();
-        //Task BulkInsertDoctors(List<DoctorDto> doctors);
-      //  Task BulkInsert(List<DoctorDto> doctors);
         void ImportDataFromExcel(Stream excelStream);
+        
     }
 }

@@ -12,16 +12,6 @@ namespace DAL.DoctorRepo
     public interface IDoctorRepo :IGenericRepo<Doctor>
     {
         Task<IEnumerable<Doctor>> GetAllDoctorsAsync();
-        //void Insert(Doctor newData);
-
-        //Task BulkInsertDoctors(List<Doctor> doctors);
-
-        void InsertExcel(Doctor doctor);
-        //Task BulkInsert(List<Doctor> doctorEntities);
-        /*Task<Patient> GetPatientByIdAsync(int id);
-Task AddPatientAsync(Patient patient);
-Task UpdatePatientAsync(Patient patient);
-Task DeletePatientAsync(Patient patient);
-Task<IEnumerable<Patient>> SearchPatientsByNameAsync(string name);*/
+        void InsertExcel(Doctor newData);
     }
 }

@@ -46,7 +46,7 @@ app.UseEndpoints(endpoints =>
         pattern: "{controller=Patients}/{action=Index}/{id?}");
 
     endpoints.MapControllerRoute(
-      name: "bulkInsert",
+      name: "Doctor",
       pattern: "Doctor/Index",
       defaults: new { controller = "Doctor", action = "Index" }
   );

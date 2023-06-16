@@ -12,21 +12,25 @@ using System.Threading.Tasks;
 
 namespace DAL.DoctorRepo
 {
-    public class DoctorRepo : GenericRepo<Doctor> , IDoctorRepo
+    public class DoctorRepo : GenericRepo<Doctor>, IDoctorRepo
     {
         private readonly DBContextClass _dBContext;
-        public DoctorRepo(DBContextClass dBContext) : base(dBContext){
-                _dBContext = dBContext;
-        }
-        public async Task<IEnumerable<Doctor>> GetAllDoctorsAsync()
+        public DoctorRepo(DBContextClass dBContext) : base(dBContext)
         {
-            return await _dBContext.Doctors.ToListAsync();
-        }
-        public void InsertExcel(Doctor doctor)
-        {
-            _dBContext.Doctors.Add(doctor);
-            _dBContext.SaveChanges();
+            _dBContext = dBContext;
         }
 
+        public async Task<IEnumerable<Doctor>> GetAllDoctorsAsync()
+        {
+            return await GetAllAsync();
+        }
+
+        public void InsertExcel(Doctor customer)
+        {
+            _dBContext.Doctors.Add(customer);
+            _dBContext.SaveChanges();
+        }
     }
+
 }
+
