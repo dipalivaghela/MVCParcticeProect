@@ -1,11 +1,5 @@
-﻿using BAL.DoctorService;
-using BAL.Service;
-using DAL.DBContext;
-using DAL.DoctorRepo;
-using DAL.GenericInterface;
-using DAL.GenericRepo;
-using DAL.Interface;
-using DAL.Repo;
+﻿using BAL.TaskService;
+using DAL.TaskRepo;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace IOCcontainer
@@ -14,11 +8,9 @@ namespace IOCcontainer
     {
        public static void RegisterServices(this IServiceCollection services)
        {
-          services.AddScoped<IPatientRepo, PatientRepo>();
-          services.AddScoped<IPatientService, PatientService>();
 
-            services.AddScoped<IDoctorRepo,DoctorRepo>();
-            services.AddScoped<IDoctorService,DoctorService>();
+            services.AddScoped<ITaskRepo,TaskRepo>();
+            services.AddScoped<ITaskService,TaskService>();
         }
     }
 }

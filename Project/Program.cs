@@ -1,12 +1,11 @@
-
-using BAL.Service;
 using DAL.DBContext;
 using DAL.GenericInterface;
 using DAL.GenericRepo;
 using IOCcontainer;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.FileSystemGlobbing.Internal;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -16,10 +15,30 @@ builder.Services.AddControllersWithViews();
 DependencyInjection.RegisterServices(builder.Services);
 
 builder.Services.AddDbContext<DBContextClass>(options =>
-           options.UseSqlServer(builder.Configuration.GetConnectionString("HospitalManagementConnectionString")));
+           options.UseSqlServer(builder.Configuration.GetConnectionString("TaskManagerConnectionString")));
 
 //builder.Services.AddScoped<IDoctorRepo, DoctorRepo>();
 builder.Services.AddScoped(typeof(IGenericRepo<>), typeof(GenericRepo<>));
+builder.Services.ConfigureApplicationCookie(options =>
+{
+    options.LoginPath = "/registration/register"; // This sets the login path to the registration page.
+});
+
+builder.Services.AddAuthentication(options =>
+{
+    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+}).AddJwtBearer(jwtOptions =>
+{
+    jwtOptions.TokenValidationParameters = new TokenValidationParameters
+    {
+        ValidateIssuer = true,
+        ValidateAudience = true,
+        ValidIssuer = "your_issuer",
+        ValidAudience = "your_audience",
+        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("your_security_key"))
+    };
+});
 
 
 var app = builder.Build();
@@ -38,23 +57,39 @@ app.UseRouting();
 
 app.UseAuthorization();
 
-
 app.UseEndpoints(endpoints =>
 {
     endpoints.MapControllerRoute(
-        name: "patient",
-        pattern: "{controller=Patients}/{action=Index}/{id?}");
+        name: "User",
+        pattern: "user/{action=Register}/{id?}",
+        defaults: new { controller = "Registration" }
+    );
 
     endpoints.MapControllerRoute(
-      name: "Doctor",
-      pattern: "Doctor/Index",
-      defaults: new { controller = "Doctor", action = "Index" }
-  );
+        name: "Task",
+        pattern: "tasks/{action=Index}/{id?}",
+        defaults: new { controller = "Tasks" }
+    );
 
     endpoints.MapControllerRoute(
-name: "DoctorPatient",
-        pattern: "{controller=Dropdown}/{action=Index}/{id?}"
-        );
+        name: "default",
+        pattern: "{controller=Registration}/{action=register}/{id?}"
+    );
+    endpoints.MapControllerRoute(
+    name: "dashboard",
+    pattern: "Dashboard/Index",
+    defaults: new { controller = "Dashboard", action = "Index" }
+);
+
+    endpoints.MapControllerRoute(
+        name: "UserProfile",
+        pattern: "UserProfile/Index",
+        defaults: new { controller = "UserProfile", action = "Index" }
+    );
+
+
 });
+
+
 
 app.Run();
